@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Pet-friendly custom styles */
+.bg-gradient-to-b {
+  background: linear-gradient(to bottom, var(--tw-gradient-stops));
+}
+
+.bg-gradient-to-r {
+  background: linear-gradient(to right, var(--tw-gradient-stops));
+}
+
+.from-orange-50 {
+  --tw-gradient-from: #fff7ed;
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(255, 247, 237, 0));
+}
+
+.from-orange-100 {
+  --tw-gradient-from: #ffedd5;
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(255, 237, 213, 0));
+}
+
+.to-orange-100 {
+  --tw-gradient-to: #ffedd5;
+}
+
+.to-orange-200 {
+  --tw-gradient-to: #fed7aa;
+}
+
+.from-orange-400 {
+  --tw-gradient-from: #fb923c;
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(251, 146, 60, 0));
+}
+
+.to-orange-500 {
+  --tw-gradient-to: #f97316;
+}
