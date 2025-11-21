@@ -61,80 +61,19 @@ export default function ProfilePage() {
           </View>
         </View>
 
-        {/* Bookings Section - Only show if customer_id matches */}
-        {user?.id && bookings && bookings.length > 0 && (
-          <View className="bg-white mx-6 mt-4 rounded-xl border-2 border-orange-200 shadow-lg">
-            <View className="bg-orange-500 px-4 py-3 rounded-t-xl">
-              <Text className="text-white text-lg font-bold">My Bookings</Text>
-            </View>
-            <View className="p-4">
-              {isLoading ? (
-                <View className="items-center py-4">
-                  <ActivityIndicator size="large" color="#f97316" />
-                  <Text className="text-gray-600 mt-2">Loading bookings...</Text>
-                </View>
-              ) : error ? (
-                <View className="items-center py-4">
-                  <Text className="text-red-500">Error: {error}</Text>
-                </View>
-              ) : (
-                <View>
-                  {bookings.map((booking, index) => (
-                    <View 
-                      key={booking.id || index}
-                      className={`bg-gray-50 rounded-lg p-4 mb-3 ${index < bookings.length - 1 ? 'border-b border-gray-200' : ''}`}
-                    >
-                      <View className="flex-row justify-between items-start mb-2">
-                        <View className="flex-1">
-                          {booking.facility_name && (
-                            <Text className="text-lg font-bold text-gray-800">
-                              🏥 {booking.facility_name}
-                            </Text>
-                          )}
-                          {booking.clinic_name && (
-                            <Text className="text-base font-semibold text-gray-700 mt-1">
-                              📍 {booking.clinic_name}
-                            </Text>
-                          )}
-                          {booking.appointment_date && (
-                            <Text className="text-sm text-gray-600 mt-2">
-                              📅 {new Date(booking.appointment_date).toLocaleDateString()}
-                            </Text>
-                          )}
-                          {(booking.start_time || booking.end_time) && (
-                            <Text className="text-sm text-gray-600 mt-1">
-                              🕐 {booking.start_time || 'N/A'} - {booking.end_time || 'N/A'}
-                            </Text>
-                          )}
-                        </View>
-                        {booking.status && (
-                          <View className={`px-3 py-1 rounded-full ${
-                            booking.status === 'confirmed' ? 'bg-green-100' :
-                            booking.status === 'pending' ? 'bg-yellow-100' :
-                            booking.status === 'cancelled' ? 'bg-red-100' :
-                            'bg-gray-100'
-                          }`}>
-                            <Text className={`text-xs font-semibold ${
-                              booking.status === 'confirmed' ? 'text-green-700' :
-                              booking.status === 'pending' ? 'text-yellow-700' :
-                              booking.status === 'cancelled' ? 'text-red-700' :
-                              'text-gray-700'
-                            }`}>
-                              {booking.status.toUpperCase()}
-                            </Text>
-                          </View>
-                        )}
-                      </View>
-                    </View>
-                  ))}
-                  <Text className="text-center text-gray-500 text-sm mt-2">
-                    Total: {bookings.length} booking{bookings.length !== 1 ? 's' : ''}
-                  </Text>
-                </View>
-              )}
-            </View>
-          </View>
-        )}
+        {/* Big Bookings Button */}
+        <View className="px-6 mt-4">
+          <TouchableOpacity 
+            onPress={() => router.push('/bookings')}
+            className="bg-orange-500 rounded-xl p-6 items-center shadow-lg"
+          >
+            <Text className="text-4xl mb-2">📋</Text>
+            <Text className="text-white text-2xl font-bold mb-1">My Bookings</Text>
+            <Text className="text-orange-100 text-sm">
+              {bookings.length > 0 ? `${bookings.length} booking${bookings.length !== 1 ? 's' : ''}` : 'View all bookings'}
+            </Text>
+          </TouchableOpacity>
+        </View>
 
         {/* Quick Stats */}
         <View className="bg-white mx-6 mt-4 rounded-xl border border-gray-100">
@@ -162,14 +101,15 @@ export default function ProfilePage() {
               Account
             </Text>
             {[
-              { title: 'Personal Information', icon: '👤', color: 'text-blue-500' },
-              { title: 'My Pets', icon: '🐾', color: 'text-orange-500' },
-              { title: 'Appointment History', icon: '📅', color: 'text-green-500' },
-              { title: 'Payment Methods', icon: '💳', color: 'text-purple-500' }
+              { title: 'Personal Information', icon: '👤', color: 'text-blue-500', onPress: null },
+              { title: 'My Pets', icon: '🐾', color: 'text-orange-500', onPress: null },
+              { title: 'Appointment History', icon: '📅', color: 'text-green-500', onPress: null },
+              { title: 'Payment Methods', icon: '💳', color: 'text-purple-500', onPress: null }
             ].map((item, index) => (
               <TouchableOpacity 
                 key={index}
-                className={`flex-row items-center p-4 ${index < 3 ? 'border-b border-gray-100' : ''}`}
+                className={`flex-row items-center p-4 ${index < 4 ? 'border-b border-gray-100' : ''}`}
+                onPress={item.onPress}
               >
                 <Text className={`text-xl mr-3 ${item.color}`}>{item.icon}</Text>
                 <Text className="flex-1 font-medium text-gray-800">{item.title}</Text>

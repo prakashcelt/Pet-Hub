@@ -21,6 +21,7 @@ export default function RootLayout() {
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="clinicDetails" options={{ headerShown: false }} />
         <Stack.Screen name="bookingScreen" options={{ headerShown: false }} />
+        <Stack.Screen name="bookings" options={{ headerShown: false }} />
       </Stack>
     </SafeAreaProvider>
   );
