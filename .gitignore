@@ -196,3 +196,8 @@ coverage/
 *.old
 *.orig
 
+
+
+# macOS Finder files
+.DS_Store
+._*
