@@ -6,7 +6,7 @@ import useAuthStore from "../zustand/auth";
 import useBookingsStore from "../zustand/bookings";
 
 export default function ProfilePage() {
-  const { user, checkAuth } = useAuthStore();
+  const { user, checkAuth, signout } = useAuthStore();
   const { bookings, isLoading, error, fetchBookings } = useBookingsStore();
   const [refreshing, setRefreshing] = useState(false);
 
@@ -34,8 +34,14 @@ export default function ProfilePage() {
     setRefreshing(false);
   }, [user?.id, checkAuth, fetchBookings]);
 
-  const handleLogout = () => {
-    router.replace('/');
+  const handleLogout = async () => {
+    try {
+      await signout();
+    } catch (e) {
+      console.log('Error signing out', e);
+    }
+    // After signout navigate to login screen
+    router.replace('/login');
   };
 
   return (
