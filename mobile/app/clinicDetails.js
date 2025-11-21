@@ -1,10 +1,11 @@
 import { useLocalSearchParams } from "expo-router";
-import { useEffect } from "react";
+import { useEffect, useState, useCallback } from "react";
 import useClinicsStore from "./zustand/clinics";
 import ClinicDetailsView from "./components/ClinicDetailsView";
 
 export default function ClinicDetailsPage() {
   const { id, name, address, description } = useLocalSearchParams();
+  const [refreshing, setRefreshing] = useState(false);
   
   // Get state and actions from Zustand store
   const { 
@@ -15,7 +16,7 @@ export default function ClinicDetailsPage() {
     clearClinicDetails 
   } = useClinicsStore();
 
-  useEffect(() => {
+  const loadClinicDetails = useCallback(() => {
     if (id) {
       // Prepare fallback data from route params
       const fallbackData = {
@@ -27,12 +28,23 @@ export default function ClinicDetailsPage() {
       // Fetch clinic details using Zustand store
       fetchClinicDetails(id, fallbackData);
     }
+  }, [id, name, address, description, fetchClinicDetails]);
+
+  useEffect(() => {
+    loadClinicDetails();
 
     // Cleanup on unmount
     return () => {
       clearClinicDetails();
     };
-  }, [id, fetchClinicDetails, clearClinicDetails, name, address, description]);
+  }, [id, clearClinicDetails, loadClinicDetails]);
+
+  // Pull to refresh functionality
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await loadClinicDetails();
+    setRefreshing(false);
+  }, [loadClinicDetails]);
 
   const handleBookAppointment = () => {
     // TODO: Implement booking logic
@@ -55,6 +67,8 @@ export default function ClinicDetailsPage() {
       error={detailsError}
       onBookAppointment={handleBookAppointment}
       onCall={handleCall}
+      refreshing={refreshing}
+      onRefresh={onRefresh}
     />
   );
 }

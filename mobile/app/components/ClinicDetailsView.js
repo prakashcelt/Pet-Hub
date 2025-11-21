@@ -1,4 +1,4 @@
-import { Text, View, TouchableOpacity, ScrollView, Alert } from "react-native";
+import { Text, View, TouchableOpacity, ScrollView, Alert, RefreshControl } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router, useNavigation } from "expo-router";
 import { use, useEffect } from "react";
@@ -12,7 +12,9 @@ export default function ClinicDetailsView({
   clinicDetails, 
   isLoading, 
   error,  
-  onCall 
+  onCall,
+  refreshing = false,
+  onRefresh
 }) {
 
 
@@ -76,7 +78,15 @@ const onBookAppointment = async () => {
 
   return (
     <SafeAreaView className="flex-1 bg-gray-50">
-      <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
+      <ScrollView 
+        className="flex-1" 
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          onRefresh ? (
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          ) : undefined
+        }
+      >
         {/* Header with back button */}
         <View className="bg-white px-6 py-4 border-b border-gray-100">
           <View className="flex-row items-center mb-2">

@@ -19,11 +19,11 @@ export default function AdminStarterScreen() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-100 via-pink-100 to-blue-100 flex items-center justify-center px-4">
-      <div className="bg-white shadow-2xl rounded-3xl overflow-hidden max-w-5xl w-full grid md:grid-cols-2">
-        
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 flex items-center justify-center px-4">
+      <div className="bg-white shadow-2xl rounded-3xl overflow-hidden max-w-5xl w-full grid md:grid-cols-10">
+
         {/* Left side: Visuals */}
-        <div className="bg-gradient-to-br from-purple-300 to-pink-300 p-8 flex flex-col items-center justify-center text-white">
+        <div className="bg-gradient-to-br from-orange-400 to-amber-500 p-8 flex flex-col items-center justify-center text-white md:col-span-3">
           <img
             src="https://cdn-icons-png.flaticon.com/512/616/616408.png"
             alt="Pet Clinic"
@@ -34,7 +34,7 @@ export default function AdminStarterScreen() {
         </div>
 
         {/* Right side: Form */}
-        <div className="p-8">
+        <div className="p-8 md:col-span-7">
           <h3 className="text-2xl font-semibold text-gray-800 mb-4">Clinic Registration Form</h3>
           <form onSubmit={handleSubmit} className="space-y-4">
             <input
@@ -43,7 +43,7 @@ export default function AdminStarterScreen() {
               placeholder="Clinic Name"
               value={form.clinicName}
               onChange={handleChange}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400"
+            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
               required
             />
             <input
@@ -52,7 +52,7 @@ export default function AdminStarterScreen() {
               placeholder="Email Address"
               value={form.email}
               onChange={handleChange}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400"
+            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
               required
             />
             <input
@@ -61,7 +61,7 @@ export default function AdminStarterScreen() {
               placeholder="Clinic Address"
               value={form.address}
               onChange={handleChange}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400"
+            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
               required
             />
             <textarea
@@ -70,12 +70,12 @@ export default function AdminStarterScreen() {
               placeholder="Brief Description"
               value={form.description}
               onChange={handleChange}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400"
+            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
               required
             ></textarea>
             <button
               type="submit"
-              className="w-full bg-purple-500 hover:bg-purple-600 text-white py-2 rounded-lg font-semibold transition"
+            className="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 rounded-lg font-semibold transition"
             >
               Apply for Approval
             </button>

@@ -4,6 +4,7 @@ import dotenv from 'dotenv/config';
 import { testConnection } from './database.js';
 import authRoutes from './routes/authRoutes.js';
 import externalRoutes from './routes/externalRoutes.js';
+import bookingsRoutes from './routes/bookingsRoutes.js';
 
 
 const app = express();
@@ -17,6 +18,7 @@ app.use(express.json());
 // API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/external', externalRoutes);
+app.use('/api/bookings', bookingsRoutes);
 // Routes
 app.get('/', (req, res) => {
     res.send('Welcome to the Pet Hub API!');

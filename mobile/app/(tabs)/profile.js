@@ -1,28 +1,140 @@
-import { Text, View, TouchableOpacity, ScrollView } from "react-native";
+import { Text, View, TouchableOpacity, ScrollView, ActivityIndicator, RefreshControl } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
+import { useEffect, useState, useCallback } from "react";
+import useAuthStore from "../zustand/auth";
+import useBookingsStore from "../zustand/bookings";
 
 export default function ProfilePage() {
+  const { user, checkAuth } = useAuthStore();
+  const { bookings, isLoading, error, fetchBookings } = useBookingsStore();
+  const [refreshing, setRefreshing] = useState(false);
+
+  useEffect(() => {
+    // Check auth and load user data
+    checkAuth();
+  }, []);
+
+  useEffect(() => {
+    // Fetch bookings when user is available
+    if (user?.id) {
+      fetchBookings(user.id);
+    }
+  }, [user?.id]);
+
+  // Pull to refresh functionality
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    // Check auth again
+    await checkAuth();
+    // Fetch bookings if user is available
+    if (user?.id) {
+      await fetchBookings(user.id);
+    }
+    setRefreshing(false);
+  }, [user?.id, checkAuth, fetchBookings]);
+
   const handleLogout = () => {
     router.replace('/');
   };
 
   return (
     <SafeAreaView className="flex-1 bg-gray-50">
-      <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
+      <ScrollView 
+        className="flex-1" 
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
         {/* Header */}
         <View className="bg-white px-6 py-6 border-b border-gray-100">
           <View className="items-center">
             <View className="w-24 h-24 bg-orange-500 rounded-full items-center justify-center mb-4">
               <Text className="text-4xl text-white">👤</Text>
             </View>
-            <Text className="text-2xl font-bold text-gray-800">John Doe</Text>
+            <Text className="text-2xl font-bold text-gray-800">{user?.name || 'John Doe'}</Text>
             <Text className="text-gray-600">Pet Parent since 2021</Text>
             <TouchableOpacity className="mt-3 bg-orange-100 px-4 py-2 rounded-full">
               <Text className="text-orange-600 font-semibold">Edit Profile</Text>
             </TouchableOpacity>
           </View>
         </View>
+
+        {/* Bookings Section - Only show if customer_id matches */}
+        {user?.id && bookings && bookings.length > 0 && (
+          <View className="bg-white mx-6 mt-4 rounded-xl border-2 border-orange-200 shadow-lg">
+            <View className="bg-orange-500 px-4 py-3 rounded-t-xl">
+              <Text className="text-white text-lg font-bold">My Bookings</Text>
+            </View>
+            <View className="p-4">
+              {isLoading ? (
+                <View className="items-center py-4">
+                  <ActivityIndicator size="large" color="#f97316" />
+                  <Text className="text-gray-600 mt-2">Loading bookings...</Text>
+                </View>
+              ) : error ? (
+                <View className="items-center py-4">
+                  <Text className="text-red-500">Error: {error}</Text>
+                </View>
+              ) : (
+                <View>
+                  {bookings.map((booking, index) => (
+                    <View 
+                      key={booking.id || index}
+                      className={`bg-gray-50 rounded-lg p-4 mb-3 ${index < bookings.length - 1 ? 'border-b border-gray-200' : ''}`}
+                    >
+                      <View className="flex-row justify-between items-start mb-2">
+                        <View className="flex-1">
+                          {booking.facility_name && (
+                            <Text className="text-lg font-bold text-gray-800">
+                              🏥 {booking.facility_name}
+                            </Text>
+                          )}
+                          {booking.clinic_name && (
+                            <Text className="text-base font-semibold text-gray-700 mt-1">
+                              📍 {booking.clinic_name}
+                            </Text>
+                          )}
+                          {booking.appointment_date && (
+                            <Text className="text-sm text-gray-600 mt-2">
+                              📅 {new Date(booking.appointment_date).toLocaleDateString()}
+                            </Text>
+                          )}
+                          {(booking.start_time || booking.end_time) && (
+                            <Text className="text-sm text-gray-600 mt-1">
+                              🕐 {booking.start_time || 'N/A'} - {booking.end_time || 'N/A'}
+                            </Text>
+                          )}
+                        </View>
+                        {booking.status && (
+                          <View className={`px-3 py-1 rounded-full ${
+                            booking.status === 'confirmed' ? 'bg-green-100' :
+                            booking.status === 'pending' ? 'bg-yellow-100' :
+                            booking.status === 'cancelled' ? 'bg-red-100' :
+                            'bg-gray-100'
+                          }`}>
+                            <Text className={`text-xs font-semibold ${
+                              booking.status === 'confirmed' ? 'text-green-700' :
+                              booking.status === 'pending' ? 'text-yellow-700' :
+                              booking.status === 'cancelled' ? 'text-red-700' :
+                              'text-gray-700'
+                            }`}>
+                              {booking.status.toUpperCase()}
+                            </Text>
+                          </View>
+                        )}
+                      </View>
+                    </View>
+                  ))}
+                  <Text className="text-center text-gray-500 text-sm mt-2">
+                    Total: {bookings.length} booking{bookings.length !== 1 ? 's' : ''}
+                  </Text>
+                </View>
+              )}
+            </View>
+          </View>
+        )}
 
         {/* Quick Stats */}
         <View className="bg-white mx-6 mt-4 rounded-xl border border-gray-100">
